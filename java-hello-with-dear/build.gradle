@@ -1,0 +1,5 @@
+apply from: '../dev/build-deps.gradle'
+
+dependencies {
+    compile project(':java-hello-spi')
+}

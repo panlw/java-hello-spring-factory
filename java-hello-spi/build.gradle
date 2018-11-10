@@ -1,0 +1,1 @@
+apply from: '../dev/build-deps.gradle'

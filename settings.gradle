@@ -1,0 +1,3 @@
+rootProject.name = 'java-hello-spring-factory'
+include 'java-hello-spi'
+include 'java-hello-with-dear'

@@ -1,0 +1,73 @@
+repositories {
+    maven {
+        url mavenUrl
+        credentials.username = mavenUsername
+        credentials.password = mavenPassword
+    }
+}
+
+/*----------------+
+|   compileJava   |
++================*/
+
+apply plugin: 'java'
+
+group = 'com.el'
+version = '1.0.0'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+compileJava {
+    options.compilerArgs << '-Xlint:unchecked'
+    options.compilerArgs << '-Xlint:deprecation'
+}
+
+sourceSets {
+    ext {
+        def scanDirs = { rootDir ->
+            def mySrcDirs = []
+            def myResDirs = []
+            file(rootDir).eachDir() { dir ->
+                dir.getName() == 'resources' ? myResDirs.add(dir) : mySrcDirs.add(dir)
+            }
+            println("[BUILD] src dirs: ${mySrcDirs}")
+            println("[BUILD] res dirs: ${myResDirs}")
+            return new Tuple(mySrcDirs, myResDirs)
+        }
+        (mainSrcDirs, mainResDirs) = scanDirs('src/main')
+        (testSrcDirs, testResDirs) = scanDirs('src/test')
+    }
+    main {
+        java {
+            srcDirs mainSrcDirs
+        }
+        resources {
+            srcDirs mainResDirs
+        }
+    }
+    test {
+        java {
+            srcDirs testSrcDirs
+        }
+        resources {
+            srcDirs testResDirs
+        }
+    }
+}
+
+/*---------+
+|   idea   |
++=========*/
+
+apply plugin: 'idea'
+
+// == IDEA 2017.2+ ==
+// FOR feature `restart` of `spring-boot-devtools`
+// SHOULD set IDEA output directory SAME as GRADLE's.
+idea {
+    module {
+        outputDir file(sourceSets.main.java.outputDir)
+        testOutputDir file(sourceSets.test.java.outputDir)
+    }
+}

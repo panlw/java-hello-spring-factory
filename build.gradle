@@ -1,0 +1,29 @@
+buildscript {
+    ext {
+        springBootVersion = '1.5.17.RELEASE'
+    }
+    repositories {
+        maven {
+            url mavenUrl
+            credentials.username = mavenUsername
+            credentials.password = mavenPassword
+        }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply from: 'dev/build-deps.gradle'
+
+apply plugin: 'org.springframework.boot'
+
+dependencies {
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+}
+
+dependencies {
+    compile project(':java-hello-spi')
+    runtime project(':java-hello-with-dear')
+}
